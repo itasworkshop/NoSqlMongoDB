@@ -1,0 +1,39 @@
+Why do we need NoSql?
+
+1. Data Structure
+JSON data Format
+JavaScript Object Notation
+
+{ "id": 11 }
+
+we can not fit JSON kind of data format into our tables, even if we do system will become too comples to be practical.
+
+2. Complexity
+3. Cost
+4. scalabilty
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

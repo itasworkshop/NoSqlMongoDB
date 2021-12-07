@@ -1,0 +1,83 @@
+Why do we need NoSql?
+
+1. Modern requires different organisation data.
+2. Sacalability
+3. New Use case 
+
+NoSql is not a replacement of traditional RDBMS databases but it goes side by side in modern application development.
+
+RDBMS
+data --> useful information/fact 
+database/DBMS --> the way you are organising your data is DBMS - simple directory structure, Excel, cloud storage
+
+RDBMS --> relational DBMS
+we are organinising our data in terms of rows and columns[Table] tables are related to each other
+
+Department
+deptid		name		location
+101		Sales		Block-C
+102		Accounts	Block-D
+103		HR		Block-E
+
+Employees
+Eid	name		salary		contact		deptid
+11	Rajesh		60000		9876544		102
+12	Suraj		70000		7887655		103
+13 	Tom		50000		3556667		202
+
+
+Example:
+RDBMS vendors
+mysql -Oracle
+oracle -Orcale
+access -Microsoft
+postgres -Open Source
+SQL server -Microsoft
+DB2 -IBM
+Sybase -Open Source
+SqlLite -Dev/Test DB
+
+SQL - Structured Query Language
+select * from emplyees where deptid = 101;
+
+
+why RDBMS
+1. To organise our data correctly using rules/regualtions/contraints
+2. I can query my data using SQL
+3. Memory Organisation and efficiancy
+4. ACID properties - all RDBMS systems folow ACID
+
+Accout A	Account B
+1000		1000 
+-200		
+		+200
+800		1200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

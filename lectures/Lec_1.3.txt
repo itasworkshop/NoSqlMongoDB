@@ -1,0 +1,194 @@
+MongoDb Setup
+
+Setup for windows 10
+
+step 1. Instruction for downloading MongoDb Community Edition
+https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
+
+step 2. Download Center
+https://www.mongodb.com/try/download/community?tck=docs_server&_ga=2.86477915.2122227629.1638846142-1080920383.1638532753&_gac=1.191191512.1638532777.Cj0KCQiAnaeNBhCUARIsABEee8XRYA2RQBUkKb2P0JPExS600_d4MAsg-SdqtGWrZUuFRzH5cTKNElcaAnyHEALw_wcB
+
+step 3. start installation with default options and let it finish, it will automatically start MongiDB Compass(GUI tool to interact with your MongoDB)
+
+verify your cmd access by opening cmd and going to C:\Program Files\MongoDB\Server\5.0\bin 
+and start mongo cmd from here by typing "mongo"
+
+Note: if server is not started then you can give "mongod"
+
+step 4. verify your setup
+first mongo db command
+
+i) show databases;
+
+schema - logical structure of your database objects owned by perticular user
+
+ii) collection --> table equivalent is collection
+
+
+
+MongoDB --> open source, document oriented NoSQL database.
+we don't store data in terms of rows and columns
+--> BSON document
+we store documents in collection --> collection of BSON documents
+
+Minimum thing which we require to create database in mongodb is collection
+
+db.mynew.save({name:"Rajesh"});
+will creat collection mynew automaticaly with one document which we are saving.
+> use HR;
+switched to db HR
+> show collections;
+emp
+> db.emp.find();
+
+to create db just say use db_name and give collection, no seperate command for creating collection is required just save any document into collection and it will db and collection both auotomaticaly
+
+> use praveen;
+switched to db praveen
+> show dbs;
+HR      0.000GB
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+test    0.000GB
+> db.mycoll.save({name:"Suraj"});
+WriteResult({ "nInserted" : 1 })
+> show dbs;
+HR       0.000GB
+admin    0.000GB
+config   0.000GB
+local    0.000GB
+praveen  0.000GB
+test     0.000GB
+
+
+- One document can be totally different than another document
+> db.mycoll.save({name:"Tom",rollno:101,subjects:["cs","EC","IT"]});
+WriteResult({ "nInserted" : 1 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+
+what is "_id"?
+every mongo db document stores document using id which is denoted by _id, if we do not provide mongo db will automatically give it. id is different than _id.
+
+> db.mycoll.save({_id:25,name:"Jack",rollno:103,subjects:["cs","EC","IT"]});
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 25 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+> db.mycoll.save({id:30,name:"John",rollno:104,subjects:["cs","EC","IT"]});
+WriteResult({ "nInserted" : 1 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af38b32d8c9781d3cadece"), "id" : 30, "name" : "John", "rollno" : 104, "subjects" : [ "cs", "EC", "IT" ] }
+
+what is MongoDB?
+what is database?
+what is collection?
+what is document?
+what is document format in mongodb?
+what is "_id"?
+can we have duplicate _id? no if we try latest will be taken with latest values.
+> db.mycoll.save({_id:27,_id:30,_id:35,name:"Jack",rollno:103,subjects:["cs","EC","IT"]});
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 35 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af38b32d8c9781d3cadece"), "id" : 30, "name" : "John", "rollno" : 104, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 30, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 35, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+
+
+There is no standard SQL kind language
+NoSQL
+Not Only SQL
+we just have some objects and functions available to interact with our database.
+
+How do you create document in MongoDB?
+Save vs Insert
+Unlike insert, save is more powerful it does upsert, if document does not exist it inserts otherwise it modifies.
+
+> db.mycoll.insert({_id:45,name:"Jimmy"});
+WriteResult({ "nInserted" : 1 })
+> db.mycoll.save({_id:45,name:"Jimmy"});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 0 })
+> db.mycoll.save({_id:46,name:"Jimmy"});
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 46 })
+> db.mycoll.insert({_id:46,name:"Jimmy"});
+WriteResult({
+        "nInserted" : 0,
+        "writeError" : {
+                "code" : 11000,
+                "errmsg" : "E11000 duplicate key error collection: praveen.mycoll index: _id_ dup key: { _id: 46.0 }"
+        }
+})
+> db.mycoll.insert({_id:46,name:"Jim"});
+WriteResult({
+        "nInserted" : 0,
+        "writeError" : {
+                "code" : 11000,
+                "errmsg" : "E11000 duplicate key error collection: praveen.mycoll index: _id_ dup key: { _id: 46.0 }"
+        }
+})
+
+
+select commands:
+1) db.mycoll.find()
+
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Ram", "rollno" : 105, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af38b32d8c9781d3cadece"), "id" : 30, "name" : "John", "rollno" : 104, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 30, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 35, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af3d782d8c9781d3cadecf"), "name" : "Jimmy" }
+{ "_id" : 45, "name" : "Jimmy" }
+{ "_id" : 46, "name" : "Jimmy" }
+
+2) db.mycoll.find() with parameters
+> db.mycoll.find({$where:"this.rollno==103"});
+{ "_id" : 30, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 35, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
