@@ -1,0 +1,210 @@
+Microsoft Windows [Version 10.0.19042.1348]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MongoDB\Server\5.0\bin>mongo
+MongoDB shell version v5.0.5
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("6ea621f4-b5e5-4108-ab74-deda1da46bd4") }
+MongoDB server version: 5.0.5
+================
+Warning: the "mongo" shell has been superseded by "mongosh",
+which delivers improved usability and compatibility.The "mongo" shell has been deprecated and will be removed in
+an upcoming release.
+For installation instructions, see
+https://docs.mongodb.com/mongodb-shell/install/
+================
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+        https://docs.mongodb.com/
+Questions? Try the MongoDB Developer Community Forums
+        https://community.mongodb.com
+---
+The server generated these startup warnings when booting:
+        2021-12-07T14:24:34.427+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+---
+---
+        Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+        metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+        The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+        and anyone you share the URL with. MongoDB may use this information to make product
+        improvements and to suggest MongoDB products and deployment options to you.
+
+        To enable free monitoring, run the following command: db.enableFreeMonitoring()
+        To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+> show databases;
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> show dbs;
+HR      0.000GB
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+> db.mynew.save({name:"Rajesh"});
+WriteResult({ "nInserted" : 1 })
+> show dbs;
+HR      0.000GB
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+test    0.000GB
+> use test;
+switched to db test
+> show dbs;
+HR      0.000GB
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+test    0.000GB
+> show collections;
+mynew
+> db.mynew.find();
+{ "_id" : ObjectId("61af331f2d8c9781d3cadecb"), "name" : "Rajesh" }
+> show dbs;
+HR      0.000GB
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+test    0.000GB
+> use HR;
+switched to db HR
+> show collections;
+emp
+> db.emp.find();
+> use praveen;
+switched to db praveen
+> show dbs;
+HR      0.000GB
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+test    0.000GB
+> db.mycoll.save({name:"Suraj"});
+WriteResult({ "nInserted" : 1 })
+> show dbs;
+HR       0.000GB
+admin    0.000GB
+config   0.000GB
+local    0.000GB
+praveen  0.000GB
+test     0.000GB
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+> db.mycoll.save({name:"Tom",rollno:101,subjects:["cs","EC","IT"]});
+WriteResult({ "nInserted" : 1 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+> db.mycoll.save({_id:25,name:"Jack",rollno:103,subjects:["cs","EC","IT"]});
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 25 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+> db.mycoll.save({id:30,name:"John",rollno:104,subjects:["cs","EC","IT"]});
+WriteResult({ "nInserted" : 1 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af38b32d8c9781d3cadece"), "id" : 30, "name" : "John", "rollno" : 104, "subjects" : [ "cs", "EC", "IT" ] }
+> db.mycoll.save({_id:25,name:"Jack",rollno:103,subjects:["cs","EC","IT"]});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 0 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af38b32d8c9781d3cadece"), "id" : 30, "name" : "John", "rollno" : 104, "subjects" : [ "cs", "EC", "IT" ] }
+> db.mycoll.save({_id:27,_id:30,name:"Jack",rollno:103,subjects:["cs","EC","IT"]});
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 30 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af38b32d8c9781d3cadece"), "id" : 30, "name" : "John", "rollno" : 104, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 30, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+> db.mycoll.save({_id:27,_id:30,_id:35,name:"Jack",rollno:103,subjects:["cs","EC","IT"]});
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 35 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af38b32d8c9781d3cadece"), "id" : 30, "name" : "John", "rollno" : 104, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 30, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 35, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+> db.mycoll.save({_id:25,name:"Jack",rollno:103,subjects:["cs","EC","IT"]});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 0 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af38b32d8c9781d3cadece"), "id" : 30, "name" : "John", "rollno" : 104, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 30, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 35, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+> db.mycoll.save({_id:25,name:"Ramesh",rollno:103,subjects:["cs","EC","IT"]});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Ramesh", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af38b32d8c9781d3cadece"), "id" : 30, "name" : "John", "rollno" : 104, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 30, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 35, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+> db.mycoll.save({_id:25,name:"Ram",rollno:105,subjects:["cs","EC","IT"]});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Ram", "rollno" : 105, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af38b32d8c9781d3cadece"), "id" : 30, "name" : "John", "rollno" : 104, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 30, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 35, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+> db.mycoll.insert({name:"Jimmy"});
+WriteResult({ "nInserted" : 1 })
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Ram", "rollno" : 105, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af38b32d8c9781d3cadece"), "id" : 30, "name" : "John", "rollno" : 104, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 30, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 35, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af3d782d8c9781d3cadecf"), "name" : "Jimmy" }
+> db.mycoll.insert({_id:45,name:"Jimmy"});
+WriteResult({ "nInserted" : 1 })
+> db.mycoll.save({_id:45,name:"Jimmy"});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 0 })
+> db.mycoll.save({_id:46,name:"Jimmy"});
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 46 })
+> db.mycoll.insert({_id:46,name:"Jimmy"});
+WriteResult({
+        "nInserted" : 0,
+        "writeError" : {
+                "code" : 11000,
+                "errmsg" : "E11000 duplicate key error collection: praveen.mycoll index: _id_ dup key: { _id: 46.0 }"
+        }
+})
+> db.mycoll.insert({_id:46,name:"Jim"});
+WriteResult({
+        "nInserted" : 0,
+        "writeError" : {
+                "code" : 11000,
+                "errmsg" : "E11000 duplicate key error collection: praveen.mycoll index: _id_ dup key: { _id: 46.0 }"
+        }
+})
+> db.mycoll.find();
+{ "_id" : ObjectId("61af34e92d8c9781d3cadecc"), "name" : "Suraj" }
+{ "_id" : ObjectId("61af35d72d8c9781d3cadecd"), "name" : "Tom", "rollno" : 101, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 25, "name" : "Ram", "rollno" : 105, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af38b32d8c9781d3cadece"), "id" : 30, "name" : "John", "rollno" : 104, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 30, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 35, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : ObjectId("61af3d782d8c9781d3cadecf"), "name" : "Jimmy" }
+{ "_id" : 45, "name" : "Jimmy" }
+{ "_id" : 46, "name" : "Jimmy" }
+> db.mycoll.find({$where:"this.rollno==103"});
+{ "_id" : 30, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+{ "_id" : 35, "name" : "Jack", "rollno" : 103, "subjects" : [ "cs", "EC", "IT" ] }
+>
