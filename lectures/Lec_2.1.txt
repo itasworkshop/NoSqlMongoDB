@@ -1,0 +1,75 @@
+Databases and Collection
+
+creating collection and databases
+1 Once you insert or save the document in mongodb it creates aollection and database automatically.
+
+Storing data
+1 save()
+2 insert()
+3 insertOne()
+
+Note:- if no databases is specified data is stored into test otherwise just mention 
+use student
+
+2 We can use createCollection()
+> db.createCollection("emp2",{capped:true,size:5242880});
+{ "ok" : 1 }
+> show collections;
+emp
+emp2
+mynewcoll
+> db.emp2.find();
+
+3 time Series Collection - sequenc measurement for a period of time
+example- weather, stock market data, website visitors
+
+Note: timestamp is required field which will accept valid BSON UTC
+
+db.createCollection("weather",{ 
+	timeseries:{
+		timeField:"timestamp",
+		metaField:"metadata"
+		}
+	}
+);
+
+> db.createCollection("weather",{timeseries:{timeField:"timestamp",metaField:"metadata"}});
+{ "ok" : 1 }
+
+> db.createCollection("weather",{timeseries:{timeField:"timestamp",metaField:"metadata"}});
+{ "ok" : 1 }
+> show collections;
+emp
+emp2
+mynewcoll
+system.buckets.weather
+system.views
+weather
+> db.weather.save({x:10});
+WriteResult({
+        "nInserted" : 1,
+        "writeError" : {
+                "code" : 2,
+                "errmsg" : "'timestamp' must be present and contain a valid BSON UTC datetime value"
+        }
+})
+> db.weather.save({x:10,"timestamp":ISODate("2021-12-07T22:43:53+0000")});
+WriteResult({ "nInserted" : 1 })
+> db.weather.find()
+{ "timestamp" : ISODate("2021-12-07T22:43:53Z"), "_id" : ObjectId("61b03105be11ba52706181f4"), "x" : 10 }
+>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
