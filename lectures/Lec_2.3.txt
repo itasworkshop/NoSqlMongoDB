@@ -113,8 +113,69 @@ to perform text search
 
 
 
+db.student2.insertMany([{"rollno": "101", "name": "Suraj", "grade": "A", pmarks: 67, cmarks: 75},{"rollno": "102", "name": "Tom", "grade": "B", pmarks: 77, cmarks: 75},{"rollno": 103, "name": "John", "grade": "C", pmarks: 60, cmarks: 55}]);
+
+db.student2.find().forEach(function(data){ db.student1.update({"rollno":{$type:"string"}},{$set:{"rollno":parseInt(data.rollno)}})})
+
+db.student1.find().forEach(function(data){ 
+		db.student1.update({"rollno":{$type:"string"}},
+					{$set:{"rollno":parseInt(data.rollno)}
+		})})
 
 
+> db.student3.update({}, [ {$set:{ "rollno" : {$toInt: "$rollno"}}} ], {multi:true})
+WriteResult({ "nMatched" : 3, "nUpserted" : 0, "nModified" : 3 })
+> db.student3.find()
+{ "_id" : ObjectId("61b0977fbe11ba5270618227"), "rollno" : 101, "name" : "Suraj", "grade" : "A", "pmarks" : 67, "cmarks" : 75 }
+{ "_id" : ObjectId("61b0977fbe11ba5270618228"), "rollno" : 102, "name" : "Tom", "grade" : "B", "pmarks" : 77, "cmarks" : 75 }
+{ "_id" : ObjectId("61b0977fbe11ba5270618229"), "rollno" : 103, "name" : "John", "grade" : "C", "pmarks" : 60, "cmarks" : 55 }
+
+
+> db.weather.save({y:2000,"timestamp":new Date(ISODate().getTime())});
+WriteResult({ "nInserted" : 1 })
+> db.weather.save({y:200,"timestamp":new Date(ISODate().getTime())});
+WriteResult({ "nInserted" : 1 })
+> db.weather.save({y:20,"timestamp":new Date(ISODate().getTime())});
+WriteResult({ "nInserted" : 1 })
+> db.weather.save({y:2,"timestamp":new Date(ISODate().getTime())});
+WriteResult({ "nInserted" : 1 })
+> db.weather.find({timestamp: {$gt: new Date(ISODate().getTime() - (1000 * 20))}});
+{ "_id" : ObjectId("61b0a05bdf35614047db5c5a"), "y" : 200, "timestamp" : ISODate("2021-12-08T12:08:59.592Z") }
+{ "_id" : ObjectId("61b0a060df35614047db5c5b"), "y" : 20, "timestamp" : ISODate("2021-12-08T12:09:04.417Z") }
+{ "_id" : ObjectId("61b0a065df35614047db5c5c"), "y" : 2, "timestamp" : ISODate("2021-12-08T12:09:09.390Z") }
+> db.weather.find({timestamp: {$gt: new Date(ISODate().getTime() - (1000 * 20))}});
+{ "_id" : ObjectId("61b0a060df35614047db5c5b"), "y" : 20, "timestamp" : ISODate("2021-12-08T12:09:04.417Z") }
+{ "_id" : ObjectId("61b0a065df35614047db5c5c"), "y" : 2, "timestamp" : ISODate("2021-12-08T12:09:09.390Z") }
+> db.weather.find({timestamp: {$gt: new Date(ISODate().getTime() - (1000 * 20))}});
+{ "_id" : ObjectId("61b0a065df35614047db5c5c"), "y" : 2, "timestamp" : ISODate("2021-12-08T12:09:09.390Z") }
+> db.weather.find({timestamp: {$gt: new Date(ISODate().getTime() - (1000 * 20))}});
+
+> db.stud.find();
+{ "_id" : ObjectId("61b0895cdf35614047db5c4d"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c4e"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c4f"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c50"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c51"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c52"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+> db.stud.insert({"rollno" : 101, "name" : "Tommy", "grade" : "A" });
+WriteResult({ "nInserted" : 1 })
+> db.stud.find();
+{ "_id" : ObjectId("61b0895cdf35614047db5c4d"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c4e"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c4f"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c50"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c51"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c52"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+{ "_id" : ObjectId("61b0992adf35614047db5c53"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+> db.stud.deleteOne({"_id" : ObjectId("61b0895cdf35614047db5c4d")});
+{ "acknowledged" : true, "deletedCount" : 1 }
+> db.stud.find();
+{ "_id" : ObjectId("61b0895cdf35614047db5c4e"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c4f"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c50"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c51"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c52"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+{ "_id" : ObjectId("61b0992adf35614047db5c53"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
 
 
 
