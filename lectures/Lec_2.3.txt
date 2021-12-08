@@ -1,0 +1,103 @@
+More about Reading/querying Data:
+
+1 find()
+2 find(
+
+No correct results use $where for binding conditions
+> db.mynewcoll.find({rollno:{$gt:103} && {grade:'A'}})
+>
+using binding
+db.mynewcoll.find({$where:"this.grade=='A' && this.rollno>103"});
+
+1. $gt
+2. $eq
+both are same
+> db.mynewcoll.find({rollno:{$eq:103}})
+{ "_id" : ObjectId("61b06f1bbe11ba5270618217"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+> db.mynewcoll.find({rollno:103})
+{ "_id" : ObjectId("61b06f1bbe11ba5270618217"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+Not allowed
+> db.mynewcoll.find({rollno==103})
+uncaught exception: SyntaxError: missing : after property id :
+@(shell):1:25
+>
+
+3. $gte
+4. $lt
+5. $lte
+6. $ne
+7. $in
+
+> db.mynewcoll.find({rollno:{$in:[102,103,109,150]}})
+{ "_id" : ObjectId("61b06f1bbe11ba5270618216"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618217"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+>
+
+8. $nin
+
+> db.mynewcoll.find({rollno:{$nin:[102,103,109,150]}})
+{ "_id" : ObjectId("61b06f1bbe11ba5270618215"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618218"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618219"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b06f1bbe11ba527061821a"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+>
+
+9. $and
+below query gives data for rollno = 103 and grade = 'B'
+
+db.mynewcoll.find({$and:[{rollno:103},{grade:'B'}]});
+
+db.mynewcoll.find({$and:[{rollno:{$gt:103}},{grade:'A'}]});
+
+10. $or
+db.mynewcoll.find({$or:[{rollno:{$gt:103}},{grade:'A'}]});
+
+11. $not
+> db.mynewcoll.find({rollno:{$not:{$eq:103}}})
+{ "_id" : ObjectId("61b06f1bbe11ba5270618215"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618216"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618218"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618219"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b06f1bbe11ba527061821a"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+
+12. $nor
+
+13. $exists
+> db.mynewcoll.insert({x:10})
+WriteResult({ "nInserted" : 1 })
+> db.mynewcoll.insert({y:10})
+WriteResult({ "nInserted" : 1 })
+> db.mynewcoll.find()
+{ "_id" : ObjectId("61b06f1bbe11ba5270618215"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618216"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618217"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618218"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618219"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b06f1bbe11ba527061821a"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+{ "_id" : ObjectId("61b07dd4be11ba527061821b"), "x" : 10 }
+{ "_id" : ObjectId("61b07dd9be11ba527061821c"), "y" : 10 }
+> db.mynewcoll.find({x:{$exists:true}})
+{ "_id" : ObjectId("61b07dd4be11ba527061821b"), "x" : 10 }
+> db.mynewcoll.find({y:{$exists:true}})
+{ "_id" : ObjectId("61b07dd9be11ba527061821c"), "y" : 10 }
+>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
