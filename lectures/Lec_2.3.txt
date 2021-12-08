@@ -83,6 +83,47 @@ WriteResult({ "nInserted" : 1 })
 >
 
 
+14. $type
+> db.mynewcoll.find({"rollno":{$type:"string"}})
+{ "_id" : ObjectId("61b083b9be11ba527061821d"), "rollno" : "107", "name" : "Tom", "grade" : "A" }
+>
+
+15. $expr
+> db.student.insertMany([{"rollno": 101, "name": "Suraj", "grade": "A", pmarks: 67, cmarks: 75},{"rollno": 102, "name": "Tom", "grade": "B", pmarks: 77, cmarks: 75},{"rollno": 103, "name": "John", "grade": "C", pmarks: 60, cmarks: 55}]);
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("61b085d5be11ba527061821e"),
+                ObjectId("61b085d5be11ba527061821f"),
+                ObjectId("61b085d5be11ba5270618220")
+        ]
+}
+> db.student.find()
+{ "_id" : ObjectId("61b085d5be11ba527061821e"), "rollno" : 101, "name" : "Suraj", "grade" : "A", "pmarks" : 67, "cmarks" : 75 }
+{ "_id" : ObjectId("61b085d5be11ba527061821f"), "rollno" : 102, "name" : "Tom", "grade" : "B", "pmarks" : 77, "cmarks" : 75 }
+{ "_id" : ObjectId("61b085d5be11ba5270618220"), "rollno" : 103, "name" : "John", "grade" : "C", "pmarks" : 60, "cmarks" : 55 }
+> db.student.find({$expr:{$gt :["$pmarks","cmarks"]}})
+> db.student.find({$expr:{$gt :["$pmarks","$cmarks"]}})
+{ "_id" : ObjectId("61b085d5be11ba527061821f"), "rollno" : 102, "name" : "Tom", "grade" : "B", "pmarks" : 77, "cmarks" : 75 }
+{ "_id" : ObjectId("61b085d5be11ba5270618220"), "rollno" : 103, "name" : "John", "grade" : "C", "pmarks" : 60, "cmarks" : 55 }
+>
+
+16. $text
+to perform text search
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
