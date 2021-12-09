@@ -1,0 +1,114 @@
+Index in MongoDB
+
+-why do we need index?
+ans:- to have better performance for searching items in tables.
+
+-MongoDb defines index at collection and supports at field or subfield level.
+
+1) Default index using _id field - unique index
+that's why ids are unique and we can retrieve documents using _id field.
+
+2)creating our own indexes 
+db.mycoll.createIndex(key)
+
+key - +1- asc, -1 - desc,
+
+which order would you choose for creating index in mongodb?
+for single field asc or desc does not matter, can use interchangebly but for compund index it takes priority. 
+
+Unique Index:-
+We can not create unique index if there are duplicate field in documents for which we are creating index.
+once we create unique index it won't allow duplicate field.
+
+> db.student.createIndex({grade:1},{unique:true})
+{
+        "numIndexesBefore" : 2,
+        "numIndexesAfter" : 3,
+        "createdCollectionAutomatically" : false,
+        "ok" : 1
+}
+> db.student.find()
+{ "_id" : ObjectId("61b085d5be11ba527061821e"), "rollno" : 101, "name" : "Suraj", "grade" : "A", "pmarks" : 67, "cmarks" : 75 }
+{ "_id" : ObjectId("61b085d5be11ba527061821f"), "rollno" : 102, "name" : "Tom", "grade" : "B", "pmarks" : 77, "cmarks" : 75 }
+{ "_id" : ObjectId("61b085d5be11ba5270618220"), "rollno" : 103, "name" : "John", "grade" : "C", "pmarks" : 60, "cmarks" : 55 }
+> db.student.insertOne({"rollno" : 101, "name" : "Tommy", "grade" : "A" })
+WriteError({
+        "index" : 0,
+        "code" : 11000,
+        "errmsg" : "E11000 duplicate key error collection: test.student index: grade_1 dup key: { grade: \"A\" }",
+        "op" : {
+                "_id" : ObjectId("61b186938fa53b26a5dffe0a"),
+                "rollno" : 101,
+                "name" : "Tommy",
+                "grade" : "A"
+        }
+}) :
+WriteError({
+        "index" : 0,
+        "code" : 11000,
+        "errmsg" : "E11000 duplicate key error collection: test.student index: grade_1 dup key: { grade: \"A\" }",
+        "op" : {
+                "_id" : ObjectId("61b186938fa53b26a5dffe0a"),
+                "rollno" : 101,
+                "name" : "Tommy",
+                "grade" : "A"
+        }
+})
+WriteError@src/mongo/shell/bulk_api.js:465:48
+mergeBatchResults@src/mongo/shell/bulk_api.js:871:49
+executeBatch@src/mongo/shell/bulk_api.js:940:13
+Bulk/this.execute@src/mongo/shell/bulk_api.js:1182:21
+DBCollection.prototype.insertOne@src/mongo/shell/crud_api.js:264:9
+@(shell):1:1
+> db.student.insertOne({"rollno" : 101, "name" : "Tommy", "grade" : "D" })
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("61b186e08fa53b26a5dffe0b")
+}
+> db.student.find()
+{ "_id" : ObjectId("61b085d5be11ba527061821e"), "rollno" : 101, "name" : "Suraj", "grade" : "A", "pmarks" : 67, "cmarks" : 75 }
+{ "_id" : ObjectId("61b085d5be11ba527061821f"), "rollno" : 102, "name" : "Tom", "grade" : "B", "pmarks" : 77, "cmarks" : 75 }
+{ "_id" : ObjectId("61b085d5be11ba5270618220"), "rollno" : 103, "name" : "John", "grade" : "C", "pmarks" : 60, "cmarks" : 55 }
+{ "_id" : ObjectId("61b186e08fa53b26a5dffe0b"), "rollno" : 101, "name" : "Tommy", "grade" : "D" }
+> db.student.insertOne({"rollno" : 101, "name" : "Tommy", "grade" : "D" })
+WriteError({
+        "index" : 0,
+        "code" : 11000,
+        "errmsg" : "E11000 duplicate key error collection: test.student index: grade_1 dup key: { grade: \"D\" }",
+        "op" : {
+                "_id" : ObjectId("61b187438fa53b26a5dffe0c"),
+                "rollno" : 101,
+                "name" : "Tommy",
+                "grade" : "D"
+        }
+}) :
+WriteError({
+        "index" : 0,
+        "code" : 11000,
+        "errmsg" : "E11000 duplicate key error collection: test.student index: grade_1 dup key: { grade: \"D\" }",
+        "op" : {
+                "_id" : ObjectId("61b187438fa53b26a5dffe0c"),
+                "rollno" : 101,
+                "name" : "Tommy",
+                "grade" : "D"
+        }
+})
+WriteError@src/mongo/shell/bulk_api.js:465:48
+mergeBatchResults@src/mongo/shell/bulk_api.js:871:49
+executeBatch@src/mongo/shell/bulk_api.js:940:13
+Bulk/this.execute@src/mongo/shell/bulk_api.js:1182:21
+DBCollection.prototype.insertOne@src/mongo/shell/crud_api.js:264:9
+@(shell):1:1
+> db.student.insertOne({"rollno" : 101, "name" : "Tommy", "grade" : "d" })
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("61b1874e8fa53b26a5dffe0d")
+}
+> db.student.find()
+{ "_id" : ObjectId("61b085d5be11ba527061821e"), "rollno" : 101, "name" : "Suraj", "grade" : "A", "pmarks" : 67, "cmarks" : 75 }
+{ "_id" : ObjectId("61b085d5be11ba527061821f"), "rollno" : 102, "name" : "Tom", "grade" : "B", "pmarks" : 77, "cmarks" : 75 }
+{ "_id" : ObjectId("61b085d5be11ba5270618220"), "rollno" : 103, "name" : "John", "grade" : "C", "pmarks" : 60, "cmarks" : 55 }
+{ "_id" : ObjectId("61b186e08fa53b26a5dffe0b"), "rollno" : 101, "name" : "Tommy", "grade" : "D" }
+{ "_id" : ObjectId("61b1874e8fa53b26a5dffe0d"), "rollno" : 101, "name" : "Tommy", "grade" : "d" }
+>
+

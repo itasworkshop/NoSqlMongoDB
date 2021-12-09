@@ -1,0 +1,207 @@
+More about Reading/querying Data:
+
+1 find()
+2 find(
+
+No correct results use $where for binding conditions
+> db.mynewcoll.find({rollno:{$gt:103} && {grade:'A'}})
+>
+using binding
+db.mynewcoll.find({$where:"this.grade=='A' && this.rollno>103"});
+
+1. $gt
+2. $eq
+both are same
+> db.mynewcoll.find({rollno:{$eq:103}})
+{ "_id" : ObjectId("61b06f1bbe11ba5270618217"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+> db.mynewcoll.find({rollno:103})
+{ "_id" : ObjectId("61b06f1bbe11ba5270618217"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+Not allowed
+> db.mynewcoll.find({rollno==103})
+uncaught exception: SyntaxError: missing : after property id :
+@(shell):1:25
+>
+
+3. $gte
+4. $lt
+5. $lte
+6. $ne
+7. $in
+
+> db.mynewcoll.find({rollno:{$in:[102,103,109,150]}})
+{ "_id" : ObjectId("61b06f1bbe11ba5270618216"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618217"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+>
+
+8. $nin
+
+> db.mynewcoll.find({rollno:{$nin:[102,103,109,150]}})
+{ "_id" : ObjectId("61b06f1bbe11ba5270618215"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618218"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618219"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b06f1bbe11ba527061821a"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+>
+
+9. $and
+below query gives data for rollno = 103 and grade = 'B'
+
+db.mynewcoll.find({$and:[{rollno:103},{grade:'B'}]});
+
+db.mynewcoll.find({$and:[{rollno:{$gt:103}},{grade:'A'}]});
+
+10. $or
+db.mynewcoll.find({$or:[{rollno:{$gt:103}},{grade:'A'}]});
+
+11. $not
+> db.mynewcoll.find({rollno:{$not:{$eq:103}}})
+{ "_id" : ObjectId("61b06f1bbe11ba5270618215"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618216"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618218"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618219"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b06f1bbe11ba527061821a"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+
+12. $nor
+
+13. $exists
+> db.mynewcoll.insert({x:10})
+WriteResult({ "nInserted" : 1 })
+> db.mynewcoll.insert({y:10})
+WriteResult({ "nInserted" : 1 })
+> db.mynewcoll.find()
+{ "_id" : ObjectId("61b06f1bbe11ba5270618215"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618216"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618217"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618218"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618219"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b06f1bbe11ba527061821a"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+{ "_id" : ObjectId("61b07dd4be11ba527061821b"), "x" : 10 }
+{ "_id" : ObjectId("61b07dd9be11ba527061821c"), "y" : 10 }
+> db.mynewcoll.find({x:{$exists:true}})
+{ "_id" : ObjectId("61b07dd4be11ba527061821b"), "x" : 10 }
+> db.mynewcoll.find({y:{$exists:true}})
+{ "_id" : ObjectId("61b07dd9be11ba527061821c"), "y" : 10 }
+>
+
+
+14. $type
+> db.mynewcoll.find({"rollno":{$type:"string"}})
+{ "_id" : ObjectId("61b083b9be11ba527061821d"), "rollno" : "107", "name" : "Tom", "grade" : "A" }
+>
+
+15. $expr
+> db.student.insertMany([{"rollno": 101, "name": "Suraj", "grade": "A", pmarks: 67, cmarks: 75},{"rollno": 102, "name": "Tom", "grade": "B", pmarks: 77, cmarks: 75},{"rollno": 103, "name": "John", "grade": "C", pmarks: 60, cmarks: 55}]);
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("61b085d5be11ba527061821e"),
+                ObjectId("61b085d5be11ba527061821f"),
+                ObjectId("61b085d5be11ba5270618220")
+        ]
+}
+> db.student.find()
+{ "_id" : ObjectId("61b085d5be11ba527061821e"), "rollno" : 101, "name" : "Suraj", "grade" : "A", "pmarks" : 67, "cmarks" : 75 }
+{ "_id" : ObjectId("61b085d5be11ba527061821f"), "rollno" : 102, "name" : "Tom", "grade" : "B", "pmarks" : 77, "cmarks" : 75 }
+{ "_id" : ObjectId("61b085d5be11ba5270618220"), "rollno" : 103, "name" : "John", "grade" : "C", "pmarks" : 60, "cmarks" : 55 }
+> db.student.find({$expr:{$gt :["$pmarks","cmarks"]}})
+> db.student.find({$expr:{$gt :["$pmarks","$cmarks"]}})
+{ "_id" : ObjectId("61b085d5be11ba527061821f"), "rollno" : 102, "name" : "Tom", "grade" : "B", "pmarks" : 77, "cmarks" : 75 }
+{ "_id" : ObjectId("61b085d5be11ba5270618220"), "rollno" : 103, "name" : "John", "grade" : "C", "pmarks" : 60, "cmarks" : 55 }
+>
+
+16. $text
+to perform text search
+
+
+
+db.student2.insertMany([{"rollno": "101", "name": "Suraj", "grade": "A", pmarks: 67, cmarks: 75},{"rollno": "102", "name": "Tom", "grade": "B", pmarks: 77, cmarks: 75},{"rollno": 103, "name": "John", "grade": "C", pmarks: 60, cmarks: 55}]);
+
+db.student2.find().forEach(function(data){ db.student1.update({"rollno":{$type:"string"}},{$set:{"rollno":parseInt(data.rollno)}})})
+
+db.student1.find().forEach(function(data){ 
+		db.student1.update({"rollno":{$type:"string"}},
+					{$set:{"rollno":parseInt(data.rollno)}
+		})})
+
+
+> db.student3.update({}, [ {$set:{ "rollno" : {$toInt: "$rollno"}}} ], {multi:true})
+WriteResult({ "nMatched" : 3, "nUpserted" : 0, "nModified" : 3 })
+> db.student3.find()
+{ "_id" : ObjectId("61b0977fbe11ba5270618227"), "rollno" : 101, "name" : "Suraj", "grade" : "A", "pmarks" : 67, "cmarks" : 75 }
+{ "_id" : ObjectId("61b0977fbe11ba5270618228"), "rollno" : 102, "name" : "Tom", "grade" : "B", "pmarks" : 77, "cmarks" : 75 }
+{ "_id" : ObjectId("61b0977fbe11ba5270618229"), "rollno" : 103, "name" : "John", "grade" : "C", "pmarks" : 60, "cmarks" : 55 }
+
+
+> db.weather.save({y:2000,"timestamp":new Date(ISODate().getTime())});
+WriteResult({ "nInserted" : 1 })
+> db.weather.save({y:200,"timestamp":new Date(ISODate().getTime())});
+WriteResult({ "nInserted" : 1 })
+> db.weather.save({y:20,"timestamp":new Date(ISODate().getTime())});
+WriteResult({ "nInserted" : 1 })
+> db.weather.save({y:2,"timestamp":new Date(ISODate().getTime())});
+WriteResult({ "nInserted" : 1 })
+> db.weather.find({timestamp: {$gt: new Date(ISODate().getTime() - (1000 * 20))}});
+{ "_id" : ObjectId("61b0a05bdf35614047db5c5a"), "y" : 200, "timestamp" : ISODate("2021-12-08T12:08:59.592Z") }
+{ "_id" : ObjectId("61b0a060df35614047db5c5b"), "y" : 20, "timestamp" : ISODate("2021-12-08T12:09:04.417Z") }
+{ "_id" : ObjectId("61b0a065df35614047db5c5c"), "y" : 2, "timestamp" : ISODate("2021-12-08T12:09:09.390Z") }
+> db.weather.find({timestamp: {$gt: new Date(ISODate().getTime() - (1000 * 20))}});
+{ "_id" : ObjectId("61b0a060df35614047db5c5b"), "y" : 20, "timestamp" : ISODate("2021-12-08T12:09:04.417Z") }
+{ "_id" : ObjectId("61b0a065df35614047db5c5c"), "y" : 2, "timestamp" : ISODate("2021-12-08T12:09:09.390Z") }
+> db.weather.find({timestamp: {$gt: new Date(ISODate().getTime() - (1000 * 20))}});
+{ "_id" : ObjectId("61b0a065df35614047db5c5c"), "y" : 2, "timestamp" : ISODate("2021-12-08T12:09:09.390Z") }
+> db.weather.find({timestamp: {$gt: new Date(ISODate().getTime() - (1000 * 20))}});
+
+> db.stud.find();
+{ "_id" : ObjectId("61b0895cdf35614047db5c4d"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c4e"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c4f"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c50"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c51"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c52"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+> db.stud.insert({"rollno" : 101, "name" : "Tommy", "grade" : "A" });
+WriteResult({ "nInserted" : 1 })
+> db.stud.find();
+{ "_id" : ObjectId("61b0895cdf35614047db5c4d"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c4e"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c4f"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c50"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c51"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c52"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+{ "_id" : ObjectId("61b0992adf35614047db5c53"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+> db.stud.deleteOne({"_id" : ObjectId("61b0895cdf35614047db5c4d")});
+{ "acknowledged" : true, "deletedCount" : 1 }
+> db.stud.find();
+{ "_id" : ObjectId("61b0895cdf35614047db5c4e"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c4f"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c50"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c51"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b0895cdf35614047db5c52"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+{ "_id" : ObjectId("61b0992adf35614047db5c53"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+
+17.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
