@@ -112,3 +112,99 @@ DBCollection.prototype.insertOne@src/mongo/shell/crud_api.js:264:9
 { "_id" : ObjectId("61b1874e8fa53b26a5dffe0d"), "rollno" : 101, "name" : "Tommy", "grade" : "d" }
 >
 
+17. $text
+If we want to perform $text search then its required to have text Index on same collection field.
+Text Index
+It automatically take type based on +1,-1 or text option in key.
+
+> db.mynewcoll.insertOne({"rollno" : 101, "name" : "Jimmy", "grade" : "B" ,"intro":"This is Jimmy, the cricket team head."})
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("61b1bdd28fa53b26a5dffe11")
+}
+> db.mynewcoll.insertOne({"rollno" : 101, "name" : "Rakesh", "grade" : "C" ,"intro":"This is Rakesh, the hacking head."})
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("61b1bdf48fa53b26a5dffe12")
+}
+> db.mynewcoll.find()
+{ "_id" : ObjectId("61b06f1bbe11ba5270618215"), "rollno" : 101, "name" : "Tommy", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618216"), "rollno" : 102, "name" : "John", "grade" : "A" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618217"), "rollno" : 103, "name" : "Sam", "grade" : "B" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618218"), "rollno" : 104, "name" : "Rajeev", "grade" : "C" }
+{ "_id" : ObjectId("61b06f1bbe11ba5270618219"), "rollno" : 105, "name" : "Rajesh", "grade" : "D" }
+{ "_id" : ObjectId("61b06f1bbe11ba527061821a"), "rollno" : 106, "name" : "Suraj", "grade" : "A" }
+{ "_id" : ObjectId("61b083b9be11ba527061821d"), "rollno" : "107", "name" : "Tom", "grade" : "A" }
+{ "_id" : ObjectId("61b1bda88fa53b26a5dffe10"), "rollno" : 101, "name" : "Tommy", "grade" : "D", "intro" : "This is Tommy, the baskeball team head." }
+{ "_id" : ObjectId("61b1bdd28fa53b26a5dffe11"), "rollno" : 101, "name" : "Jimmy", "grade" : "B", "intro" : "This is Jimmy, the cricket team head." }
+{ "_id" : ObjectId("61b1bdf48fa53b26a5dffe12"), "rollno" : 101, "name" : "Rakesh", "grade" : "C", "intro" : "This is Rakesh, the hacking head." }
+> db.mynewcoll.find({$text:{$search:"hacking"}})
+Error: error: {
+        "ok" : 0,
+        "errmsg" : "text index required for $text query",
+        "code" : 27,
+        "codeName" : "IndexNotFound"
+}
+> db.mynewcoll.createIndex({"intro":"text",description:"text"})
+{
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "createdCollectionAutomatically" : false,
+        "ok" : 1
+}
+> db.mynewcoll.find({$text:{$search:"hacking"}})
+{ "_id" : ObjectId("61b1bdf48fa53b26a5dffe12"), "rollno" : 101, "name" : "Rakesh", "grade" : "C", "intro" : "This is Rakesh, the hacking head." }
+> db.mynewcoll.insertOne({"rollno" : 101, "name" : "Jimmy", "grade" : "B" ,"intro":"This is Jimmy, the cricket team hacking head."})
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("61b1bfb18fa53b26a5dffe13")
+}
+> db.mynewcoll.find({$text:{$search:"hacking"}})
+{ "_id" : ObjectId("61b1bdf48fa53b26a5dffe12"), "rollno" : 101, "name" : "Rakesh", "grade" : "C", "intro" : "This is Rakesh, the hacking head." }
+{ "_id" : ObjectId("61b1bfb18fa53b26a5dffe13"), "rollno" : 101, "name" : "Jimmy", "grade" : "B", "intro" : "This is Jimmy, the cricket team hacking head." }
+> db.mynewcoll.find({$text:{$search:"hacking head"}})
+{ "_id" : ObjectId("61b1bdf48fa53b26a5dffe12"), "rollno" : 101, "name" : "Rakesh", "grade" : "C", "intro" : "This is Rakesh, the hacking head." }
+{ "_id" : ObjectId("61b1bfb18fa53b26a5dffe13"), "rollno" : 101, "name" : "Jimmy", "grade" : "B", "intro" : "This is Jimmy, the cricket team hacking head." }
+{ "_id" : ObjectId("61b1bdd28fa53b26a5dffe11"), "rollno" : 101, "name" : "Jimmy", "grade" : "B", "intro" : "This is Jimmy, the cricket team head." }
+{ "_id" : ObjectId("61b1bda88fa53b26a5dffe10"), "rollno" : 101, "name" : "Tommy", "grade" : "D", "intro" : "This is Tommy, the baskeball team head." }
+>
+
+sort() operation:-
+asce +1 and desc -1 based on requirement.
+> db.mynewcoll.find({$text:{$search:"hacking head"}}).sort({intro:-1})
+
+WildCard Index("$**") -- on all string type column
+> db.mynewcoll.createIndex({"$**":"text"})
+{
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "createdCollectionAutomatically" : false,
+        "ok" : 1
+}
+> db.mynewcoll.find({$text:{$search:"Rakesh"}})
+{ "_id" : ObjectId("61b1bdf48fa53b26a5dffe12"), "rollno" : 101, "name" : "Rakesh", "grade" : "C", "intro" : "This is Rakesh, the hacking head." }
+> db.mynewcoll.find({$text:{$search:"hacking"}})
+{ "_id" : ObjectId("61b1bdf48fa53b26a5dffe12"), "rollno" : 101, "name" : "Rakesh", "grade" : "C", "intro" : "This is Rakesh, the hacking head." }
+{ "_id" : ObjectId("61b1bfb18fa53b26a5dffe13"), "rollno" : 101, "name" : "Jimmy", "grade" : "B", "intro" : "This is Jimmy, the cricket team hacking head." }
+>
+
+for more specific search option of multiple words together, use escape and string combination.
+Below will give you result for both match with white space.
+> db.mynewcoll.find({$text:{$search:"\"hacking head\""}})
+> db.mynewcoll.find({$text:{$search:"\"hacking head\""}})
+{ "_id" : ObjectId("61b1bdf48fa53b26a5dffe12"), "rollno" : 101, "name" : "Rakesh", "grade" : "C", "intro" : "This is Rakesh, the hacking head." }
+{ "_id" : ObjectId("61b1bfb18fa53b26a5dffe13"), "rollno" : 101, "name" : "Jimmy", "grade" : "B", "intro" : "This is Jimmy, the cricket team hacking head." }
+>
+
+Negation Search--> just use -
+below will give all the results without cricket
+
+> db.mynewcoll.find({$text:{$search:"\"hacking head\" -cricket"}})
+{ "_id" : ObjectId("61b1bdf48fa53b26a5dffe12"), "rollno" : 101, "name" : "Rakesh", "grade" : "C", "intro" : "This is Rakesh, the hacking head." }
+> db.mynewcoll.find({$text:{$search:"\"hacking head\" -Rakesh"}})
+{ "_id" : ObjectId("61b1bfb18fa53b26a5dffe13"), "rollno" : 101, "name" : "Jimmy", "grade" : "B", "intro" : "This is Jimmy, the cricket team hacking head." }
+
+
+
+
+
