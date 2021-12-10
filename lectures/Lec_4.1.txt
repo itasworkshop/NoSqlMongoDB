@@ -25,6 +25,34 @@ Aggregation
 { "_id" : 103, "avgMarks" : 57.5 }
 { "_id" : 102, "avgMarks" : 76 }
 { "_id" : 101, "avgMarks" : 17.75 }
-
-> db.weather.aggregate([{$group:{_id:{$dayOfMonth:{$toDate:"$date_time"}}}}])
 >
+
+db.weather.aggregate([
+    { "$addFields": {
+        "date": {
+            "$toDate": "$date_time"
+        }
+    } },
+    {
+                $addFields: {
+                    onlyDate: {
+                        $dateToString: {
+                            format: '%Y-%m-%d',
+                            date: '$date'
+                        }
+                    }
+                }
+            },
+    {
+      $group:{
+        _id:"$onlyDate",
+        city:{$addToSet:"$city"},
+        max_temperature:{$max:"$currently_temperature"}
+      }
+    },
+    {
+      $sort:{
+        "_id":1
+      }
+    }
+])
