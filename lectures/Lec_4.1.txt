@@ -1,0 +1,30 @@
+More About Operators
+
+Aggregation
+1. $group
+2. $count
+
+> db.student.aggregate([{$group:{_id:"$grade",xyz:{$count:{}}}}])
+> db.student.aggregate([{$group:{_id:"$grade",xyz:{$count:{}}}}])
+
+> db.weather.aggregate([{$group:{_id:"$city", avg:{$avg:"$currently_temperature"}}}]);
+ 
+
+{ "_id" : "Vienna", "avg" : 12.410097810898929 }
+{ "_id" : "Zurich", "avg" : 13.187506361323154 }
+{ "_id" : "Gothenburg", "avg" : 8.255659059152306 }
+{ "_id" : "Copenhagen", "avg" : 9.671015370284117 }
+{ "_id" : "Lyon", "avg" : 14.118699906803355 }
+{ "_id" : "Brussels", "avg" : 10.797363763390777 }
+{ "_id" : "test", "avg" : 21.22 }
+{ "_id" : "Berlin", "avg" : 12.268012889366274 }
+{ "_id" : "Zaragoza", "avg" : 14.920396085740913 }
+{ "_id" : "Helsinki", "avg" : 8.065960591133006 }
+
+> db.student.aggregate([{$group:{_id:"$rollno", avgMarks: {$avg: {$divide: [{$sum:["$cmarks","$pmarks"]},2] } } } }]);
+{ "_id" : 103, "avgMarks" : 57.5 }
+{ "_id" : 102, "avgMarks" : 76 }
+{ "_id" : 101, "avgMarks" : 17.75 }
+
+> db.weather.aggregate([{$group:{_id:{$dayOfMonth:{$toDate:"$date_time"}}}}])
+>
